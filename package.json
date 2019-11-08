@@ -16,6 +16,7 @@
         "react-scripts": "3.2.0",
         "redux": "^4.0.4",
         "redux-saga": "^1.1.1",
+        "rmc-pull-to-refresh": "^1.0.11",
         "typeface-roboto": "^0.0.75",
         "typescript": "^3.6.4"
     },
