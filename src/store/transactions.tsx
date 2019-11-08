@@ -1,3 +1,3 @@
 export function* transactionsSaga() {
-    console.log('loadTransactions');
+  console.log('loadTransactions')
 }
