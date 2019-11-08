@@ -3,17 +3,17 @@ import ReactDOM from 'react-dom'
 import { applyMiddleware, combineReducers, createStore } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import './index.css'
-import App from './components/App'
+import Root from 'components/Root'
 import { rootSaga, rootReducer } from './store'
 import * as serviceWorker from './serviceWorker'
 import 'typeface-roboto'
 
 const sagaMiddleware = createSagaMiddleware()
-const store = createStore(combineReducers(rootReducer), applyMiddleware(sagaMiddleware))
+export const store = createStore(combineReducers(rootReducer), applyMiddleware(sagaMiddleware))
 sagaMiddleware.run(rootSaga)
 
 function render() {
-  ReactDOM.render(<App />, document.getElementById('root'))
+  ReactDOM.render(<Root />, document.getElementById('root'))
 }
 
 render()
