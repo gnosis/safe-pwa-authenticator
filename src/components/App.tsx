@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -9,58 +10,70 @@ import InboxIcon from '@material-ui/icons/Inbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import PullToRefresh from 'rmc-pull-to-refresh';
 import logo from '../logo.svg';
-import './App.css';
+import './App.css'
+import { StateType } from '../store/state';
+import { transactionsSelector, refreshTransactionsAction, transactionsLoadingSelector } from '../store/transactions';
 
 function ListItemLink(props: any) {
   return <ListItem button component="a" {...props} />;
 }
 
-function App() {
+type PropsType = {
+    transactions: string[];
+    transactionsLoading: boolean;
+    dispatchRefresh: () => void;
+};
 
-    const handleRefresh = async () => {
-      }
+class AppModel extends React.Component<PropsType> {
 
-    return (
-        <div className="App">
-            <header className="App-header">
-                <PullToRefresh onRefresh={handleRefresh} >
-                    <List component="nav" aria-label="main mailbox folders">
-                        <ListItem button>
-                            <ListItemIcon>
-                            <InboxIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Inbox" />
+    componentDidMount() {
+        console.log("componentDidMount")
+        this.props.dispatchRefresh();
+    }
+
+    handleRefresh = async () => {
+        console.log("handleRefresh")
+        this.props.dispatchRefresh();
+    }
+
+    render() {
+        console.log("render", this.props)
+        return (
+            <PullToRefresh
+                style={{ height: '100vh', overflow: 'auto' }}
+                direction="down"
+                refreshing={this.props.transactionsLoading}
+                onRefresh={this.handleRefresh}
+                indicator={{ deactivate: '下拉' }}
+                damping={150}
+            >
+                <List component="nav" aria-label="main mailbox folders">
+                    {this.props.transactions.map(item => (
+                        <ListItem 
+                            style={{ width: '100vh', overflow: 'auto' }}
+                        >
+                            <ListItemText primary={item} />
                         </ListItem>
-                        <ListItem button>
-                            <ListItemIcon>
-                            <DraftsIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Drafts" />
-                        </ListItem>
-                        </List>
-                        <Divider />
-                        <List component="nav" aria-label="secondary mailbox folders">
-                        <ListItem button>
-                            <ListItemText primary="Trash" />
-                        </ListItem>
-                        <ListItemLink href="#simple-list">
-                            <ListItemText primary="Spam" />
-                        </ListItemLink>
-                    </List>
-                </PullToRefresh>
-                <Button variant="contained" color="primary">
-                    Hello World
-                </Button>
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>
-                    Edit <code>src/components/App.js</code> and save to reload.
-                </p>
-                <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-                    Learn React
-                </a>
-            </header>
-        </div>
-    );
+                    ))}
+                </List>
+            </PullToRefresh>
+        );
+    }
 }
 
-export default App;
+const mapStateToProps = (state: StateType) => {
+    console.log("mapStateToProps", state)
+    return ({
+        transactions: transactionsSelector(state),
+        transactionsLoading: transactionsLoadingSelector(state)
+    })}
+;
+
+const mapDispatchToProps = {
+    dispatchRefresh: refreshTransactionsAction,
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(AppModel);

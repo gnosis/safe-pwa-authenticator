@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {applyMiddleware, combineReducers, createStore} from 'redux';
 import createSagaMiddleware from 'redux-saga';
+import {Provider} from 'react-redux';
 import './index.css';
 import App from './components/App';
 import {rootSaga, rootReducer} from './store';
@@ -13,7 +14,7 @@ const store = createStore(combineReducers(rootReducer), applyMiddleware(sagaMidd
 sagaMiddleware.run(rootSaga);
 
 function render() {
-    ReactDOM.render(<App />, document.getElementById('root'));
+    ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
 }
 
 render();
