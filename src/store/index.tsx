@@ -1,7 +1,10 @@
 import {all} from 'redux-saga/effects';
-import {transactionsSaga} from './transactions';
+import {transactionsReducer, transactionsSaga, transactionsLoadingReducer} from './transactions';
 
-export const rootReducer = {};
+export const rootReducer = {
+    transactions: transactionsReducer,
+    transactionsLoading: transactionsLoadingReducer
+};
 
 export function* rootSaga() {
     yield all([transactionsSaga()]);
